@@ -145,8 +145,14 @@ EXCEPTION);
     {
         $classMetadatas = [];
         foreach ($entityRepositoryClasses as $entityClass => $entityRepositoryClass) {
-            $metadata                            = new ClassMetadata($entityClass);
-            $metadata->customRepositoryClassName = $entityRepositoryClass;
+            $namespace = '';
+            if (strpos($entityClass, '\\') !== false) {
+                $namespace = strrev(substr(strrev($entityClass), (int) strpos(strrev($entityClass), '\\') + 1));
+            }
+
+            $metadata = new ClassMetadata($entityClass);
+            $metadata->namespace = $namespace;
+            $metadata->setCustomRepositoryClass($entityRepositoryClass);
 
             $classMetadatas[$entityClass] = $metadata;
         }
